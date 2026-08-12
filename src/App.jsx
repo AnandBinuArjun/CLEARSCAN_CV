@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { AppShell } from './components/layout/AppShell';
 import { Landing } from './pages/Landing';
 import { Dashboard } from './pages/Dashboard';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/ats-guide" element={<AtsGuide />} />
         </Route>
       </Routes>
+      <Analytics />
     </BrowserRouter>
     </ToastProvider>
   );
