@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { useCVStore } from '../../store/cvStore';
 import { Input } from '../ui/Input';
 import { useEffect } from 'react';
-import { User, Mail, Phone, MapPin, Link as LinkIcon, Globe } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Link as LinkIcon, Globe, Briefcase } from 'lucide-react';
 
 // Normalize LinkedIn URL: strip prefix, keep only slug
 function normalizeLinkedIn(val) {
@@ -48,6 +48,7 @@ export function PersonalInfoForm() {
 
   const fields = [
     { name: 'fullName',  label: 'Full Name',          placeholder: 'John Doe',             type: 'text',  required: true,  icon: <User size={15} /> },
+    { name: 'jobTitle',  label: 'Job Title',          placeholder: 'Senior Product Manager',type: 'text',  required: false, icon: <Briefcase size={15} /> },
     { name: 'email',     label: 'Email Address',       placeholder: 'john@example.com',     type: 'email', required: true,  icon: <Mail size={15} /> },
     { name: 'phone',     label: 'Phone Number',        placeholder: '+1 (555) 123-4567',    type: 'tel',   required: false, icon: <Phone size={15} /> },
     { name: 'location',  label: 'Location',            placeholder: 'New York, NY',         type: 'text',  required: false, icon: <MapPin size={15} /> },

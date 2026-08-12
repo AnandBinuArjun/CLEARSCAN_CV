@@ -9,15 +9,16 @@ const fonts = {
 /* All colors are hardcoded as inline styles to prevent dark-mode color-scheme
    from bleeding into the white document preview area. */
 const DOC_STYLES = {
-  root:      { color: '#1a1a1a', backgroundColor: '#ffffff' },
-  name:      { color: '#111111', fontSize: '22pt', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0, padding: 0 },
-  contact:   { color: '#444444', fontSize: '9.5pt', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0 8px', marginTop: '6px' },
-  sectionH2: { color: '#111111', fontSize: '10.5pt', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em', borderBottom: '1.5px solid #111111', paddingBottom: '3px', marginBottom: '8px', marginTop: 0 },
+  root:      { color: '#111111', backgroundColor: '#ffffff' },
+  name:      { color: '#111111', fontSize: '24pt', fontWeight: '700', margin: 0, padding: 0, lineHeight: 1.1 },
+  jobTitle:  { color: '#333333', fontSize: '12pt', fontWeight: '400', marginTop: '4px', marginBottom: '4px' },
+  contact:   { color: '#333333', fontSize: '10pt', display: 'flex', flexWrap: 'wrap', marginTop: '4px', paddingBottom: '12px', borderBottom: '1.5px solid #444444' },
+  sectionH2: { color: '#111111', fontSize: '11pt', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '8px', marginTop: 0 },
   body:      { color: '#222222', fontSize: '10.5pt' },
   bold:      { fontWeight: '700', color: '#111111' },
   muted:     { color: '#555555' },
   italic:    { fontStyle: 'italic', color: '#333333' },
-  link:      { color: '#1a56db', textDecoration: 'none' },
+  link:      { color: '#111111', textDecoration: 'none' },
 };
 
 export function CVPreview() {
@@ -38,24 +39,26 @@ export function CVPreview() {
       }}
     >
       {/* ── HEADER ─────────────────────────────────── */}
-      <header style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <header style={{ marginBottom: '20px' }}>
         <h1 style={DOC_STYLES.name}>
           {personalInfo.fullName || 'Your Name'}
         </h1>
+        {personalInfo.jobTitle && (
+          <div style={DOC_STYLES.jobTitle}>{personalInfo.jobTitle}</div>
+        )}
         <div style={DOC_STYLES.contact}>
-          {personalInfo.email    && <span>{personalInfo.email}</span>}
-          {personalInfo.phone    && <span>• {personalInfo.phone}</span>}
-          {personalInfo.location && <span>• {personalInfo.location}</span>}
-          {personalInfo.linkedin && (
-            <span>• <a href={personalInfo.linkedin} style={DOC_STYLES.link}>
-              {personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}
-            </a></span>
-          )}
-          {personalInfo.portfolio && (
-            <span>• <a href={personalInfo.portfolio} style={DOC_STYLES.link}>
-              {personalInfo.portfolio.replace(/^https?:\/\/(www\.)?/, '')}
-            </a></span>
-          )}
+          {[
+            personalInfo.location,
+            personalInfo.email,
+            personalInfo.phone,
+            personalInfo.linkedin ? personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '') : null,
+            personalInfo.portfolio ? personalInfo.portfolio.replace(/^https?:\/\/(www\.)?/, '') : null
+          ].filter(Boolean).map((item, i) => (
+            <span key={i}>
+              {i > 0 && <span style={{ margin: '0 6px' }}>|</span>}
+              {item}
+            </span>
+          ))}
         </div>
       </header>
 
@@ -89,22 +92,19 @@ export function CVPreview() {
       {/* ── WORK EXPERIENCE ───────────────────────── */}
       {experience.length > 0 && (
         <section style={{ marginBottom: '16px' }}>
-          <h2 style={DOC_STYLES.sectionH2}>Work Experience</h2>
+          <h2 style={DOC_STYLES.sectionH2}>Professional Experience</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {experience.map((exp) => (
               <div key={exp.id}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <div style={{ marginBottom: '2px' }}>
                   <span style={DOC_STYLES.bold}>{exp.title}</span>
-                  <span style={{ ...DOC_STYLES.muted, fontSize: '9.5pt' }}>
-                    {exp.startDate} – {exp.current ? 'Present' : exp.endDate}
-                  </span>
+                  <span style={DOC_STYLES.bold}> — {exp.company}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
-                  <span style={DOC_STYLES.italic}>{exp.company}</span>
-                  <span style={{ ...DOC_STYLES.muted, fontSize: '9.5pt' }}>{exp.location}</span>
+                <div style={{ ...DOC_STYLES.italic, fontSize: '10pt', marginBottom: '6px' }}>
+                  {exp.location} | {exp.startDate} – {exp.current ? 'Present' : exp.endDate}
                 </div>
                 {exp.bullets && exp.bullets.length > 0 && (
-                  <ul style={{ margin: '0', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <ul style={{ margin: '0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '4px', listStyleType: 'disc' }}>
                     {exp.bullets.map((bullet, i) => (
                       <li key={i} style={DOC_STYLES.body}>{bullet}</li>
                     ))}
@@ -120,22 +120,18 @@ export function CVPreview() {
       {education.length > 0 && (
         <section style={{ marginBottom: '16px' }}>
           <h2 style={DOC_STYLES.sectionH2}>Education</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {education.map((edu) => (
               <div key={edu.id}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <div style={{ marginBottom: '2px' }}>
                   <span style={DOC_STYLES.bold}>{edu.degree}</span>
-                  <span style={{ ...DOC_STYLES.muted, fontSize: '9.5pt' }}>
-                    {edu.startDate ? `${edu.startDate} – ` : ''}{edu.endDate}
-                  </span>
+                  <span style={DOC_STYLES.bold}> — {edu.institution}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <span style={DOC_STYLES.italic}>{edu.institution}</span>
-                  <span style={{ ...DOC_STYLES.muted, fontSize: '9.5pt' }}>{edu.location}</span>
+                <div style={{ ...DOC_STYLES.italic, fontSize: '10pt' }}>
+                  {edu.location ? `${edu.location} | ` : ''}
+                  {edu.startDate ? `${edu.startDate} – ` : ''}{edu.endDate}
+                  {edu.gpa && ` | GPA: ${edu.gpa}`}
                 </div>
-                {edu.gpa && (
-                  <div style={{ ...DOC_STYLES.body, fontSize: '9.5pt', marginTop: '2px' }}>GPA: {edu.gpa}</div>
-                )}
               </div>
             ))}
           </div>
@@ -173,14 +169,12 @@ export function CVPreview() {
       {certifications.length > 0 && (
         <section style={{ marginBottom: '16px' }}>
           <h2 style={DOC_STYLES.sectionH2}>Certifications</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {certifications.map((cert) => (
-              <div key={cert.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <div style={DOC_STYLES.body}>
-                  <span style={DOC_STYLES.bold}>{cert.name}</span>
-                  {cert.issuer && <span style={DOC_STYLES.muted}> — {cert.issuer}</span>}
-                </div>
-                <span style={{ ...DOC_STYLES.muted, fontSize: '9.5pt' }}>{cert.date}</span>
+              <div key={cert.id} style={DOC_STYLES.body}>
+                {cert.name}
+                {cert.issuer && <span> — {cert.issuer}</span>}
+                {cert.date && <span>, {cert.date}</span>}
               </div>
             ))}
           </div>

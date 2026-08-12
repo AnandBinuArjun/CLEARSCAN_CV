@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 const initialCVState = {
   personalInfo: {
     fullName: '',
+    jobTitle: '',
     email: '',
     phone: '',
     location: '',

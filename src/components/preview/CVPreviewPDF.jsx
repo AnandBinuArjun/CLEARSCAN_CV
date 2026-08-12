@@ -13,17 +13,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   name: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: 'Helvetica-Bold',
-    textTransform: 'uppercase',
     marginBottom: 4,
+  },
+  jobTitle: {
+    fontSize: 12,
+    color: '#333333',
+    marginBottom: 6,
   },
   contactInfo: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
-    fontSize: 10,
+    fontSize: 9.5,
     color: '#333333',
+    paddingBottom: 10,
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#444444',
+    marginBottom: 12,
   },
   contactItem: {
     marginHorizontal: 4,
@@ -32,12 +39,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 11,
     fontFamily: 'Helvetica-Bold',
     textTransform: 'uppercase',
-    borderBottomWidth: 1,
-    borderBottomColor: '#000000',
-    paddingBottom: 2,
+    letterSpacing: 0.5,
     marginBottom: 6,
   },
   paragraph: {
@@ -55,11 +60,10 @@ const styles = StyleSheet.create({
   },
   entryHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginBottom: 2,
   },
   entrySubheader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginBottom: 4,
   },
   bulletRow: {
@@ -113,8 +117,8 @@ export const CVPreviewPDF = ({ data }) => {
 
   const dynamicStyles = StyleSheet.create({
     page: { padding: 40, fontFamily: baseFont, fontSize: 11, lineHeight: 1.4, color: '#000000' },
-    name: { fontSize: 20, fontFamily: boldFont, textTransform: 'uppercase', marginBottom: 4 },
-    sectionTitle: { fontSize: 13, fontFamily: boldFont, textTransform: 'uppercase', borderBottomWidth: 1, borderBottomColor: '#000000', paddingBottom: 2, marginBottom: 6 },
+    name: { fontSize: 22, fontFamily: boldFont, marginBottom: 4 },
+    sectionTitle: { fontSize: 11, fontFamily: boldFont, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 },
     bold: { fontFamily: boldFont },
     italic: { fontFamily: italicFont }
   });
@@ -125,12 +129,20 @@ export const CVPreviewPDF = ({ data }) => {
         {/* HEADER */}
         <View style={styles.header}>
           <Text style={[styles.name, dynamicStyles.name]}>{personalInfo.fullName || 'Your Name'}</Text>
+          {personalInfo.jobTitle && <Text style={styles.jobTitle}>{personalInfo.jobTitle}</Text>}
+          
           <View style={styles.contactInfo}>
-            {personalInfo.email && <Text style={styles.contactItem}>{personalInfo.email}</Text>}
-            {personalInfo.phone && <Text style={styles.contactItem}>• {personalInfo.phone}</Text>}
-            {personalInfo.location && <Text style={styles.contactItem}>• {personalInfo.location}</Text>}
-            {personalInfo.linkedin && <Text style={styles.contactItem}>• {stripHttp(personalInfo.linkedin)}</Text>}
-            {personalInfo.portfolio && <Text style={styles.contactItem}>• {stripHttp(personalInfo.portfolio)}</Text>}
+            {[
+              personalInfo.location,
+              personalInfo.email,
+              personalInfo.phone,
+              personalInfo.linkedin ? stripHttp(personalInfo.linkedin) : null,
+              personalInfo.portfolio ? stripHttp(personalInfo.portfolio) : null
+            ].filter(Boolean).map((item, i) => (
+              <Text key={i} style={styles.contactItem}>
+                {i > 0 ? ` | ${item}` : item}
+              </Text>
+            ))}
           </View>
         </View>
 
@@ -164,16 +176,15 @@ export const CVPreviewPDF = ({ data }) => {
         {/* EXPERIENCE */}
         {experience.length > 0 && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>Experience</Text>
+            <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>Professional Experience</Text>
             {experience.map((exp, idx) => (
               <View key={idx} style={{ marginBottom: 8 }}>
                 <View style={styles.entryHeader}>
                   <Text style={[styles.bold, dynamicStyles.bold]}>{exp.title}</Text>
-                  <Text>{exp.startDate} – {exp.current ? 'Present' : exp.endDate}</Text>
+                  <Text style={[styles.bold, dynamicStyles.bold]}> — {exp.company}</Text>
                 </View>
                 <View style={styles.entrySubheader}>
-                  <Text style={[styles.italic, dynamicStyles.italic]}>{exp.company}</Text>
-                  <Text>{exp.location}</Text>
+                  <Text style={[styles.italic, dynamicStyles.italic]}>{exp.location} | {exp.startDate} – {exp.current ? 'Present' : exp.endDate}</Text>
                 </View>
                 {exp.bullets && exp.bullets.map((bullet, i) => (
                   <View key={i} style={styles.bulletRow}>
@@ -194,13 +205,15 @@ export const CVPreviewPDF = ({ data }) => {
               <View key={idx} style={{ marginBottom: 6 }}>
                 <View style={styles.entryHeader}>
                   <Text style={[styles.bold, dynamicStyles.bold]}>{edu.degree}</Text>
-                  <Text>{edu.startDate ? `${edu.startDate} – ` : ''}{edu.endDate}</Text>
+                  <Text style={[styles.bold, dynamicStyles.bold]}> — {edu.institution}</Text>
                 </View>
                 <View style={styles.entrySubheader}>
-                  <Text style={[styles.italic, dynamicStyles.italic]}>{edu.institution}</Text>
-                  <Text>{edu.location}</Text>
+                  <Text style={[styles.italic, dynamicStyles.italic]}>
+                    {edu.location ? `${edu.location} | ` : ''}
+                    {edu.startDate ? `${edu.startDate} – ` : ''}{edu.endDate}
+                    {edu.gpa && ` | GPA: ${edu.gpa}`}
+                  </Text>
                 </View>
-                {edu.gpa && <Text>GPA: {edu.gpa}</Text>}
               </View>
             ))}
           </View>
@@ -229,9 +242,12 @@ export const CVPreviewPDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>Certifications</Text>
             {certifications.map((cert, idx) => (
-              <View key={idx} style={styles.entryHeader}>
-                <Text><Text style={[styles.bold, dynamicStyles.bold]}>{cert.name}</Text> — {cert.issuer}</Text>
-                <Text>{cert.date}</Text>
+              <View key={idx} style={{ marginBottom: 4 }}>
+                <Text>
+                  {cert.name}
+                  {cert.issuer && ` — ${cert.issuer}`}
+                  {cert.date && `, ${cert.date}`}
+                </Text>
               </View>
             ))}
           </View>
