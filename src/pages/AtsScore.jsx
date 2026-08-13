@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useCVStore } from '../store/cvStore';
 import { calculateATSScore } from '../lib/atsScoring';
 import { Button } from '../components/ui/Button';
+import { SEO } from '../components/seo/SEO';
 import { Textarea } from '../components/ui/Textarea';
 import { CheckCircle2, AlertCircle, Zap, TrendingUp, Target, Award, FlaskConical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -153,6 +154,12 @@ export default function AtsScore() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 animate-fade-in">
+      <SEO 
+        title="Free ATS Resume Checker | Clearscan" 
+        description="Check your resume against a job description in real time. Our free ATS resume checker scans for missing keywords and formatting errors."
+        keywords="free ATS resume checker, resume keyword scanner, resume keyword match tool, resume builder with live ATS score"
+        url="/ats-score"
+      />
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>

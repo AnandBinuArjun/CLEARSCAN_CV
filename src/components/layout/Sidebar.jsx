@@ -1,5 +1,5 @@
 import { NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, FileText, LayoutTemplate, ShieldCheck, Settings, BookOpen, Zap } from 'lucide-react';
+import { LayoutDashboard, FileText, LayoutTemplate, ShieldCheck, Settings, BookOpen, Zap, PenTool } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useRef } from 'react';
 
@@ -8,12 +8,13 @@ const navItems = [
   { icon: FileText,        label: 'Builder',     path: '/builder' },
   { icon: LayoutTemplate,  label: 'Templates',   path: '/templates' },
   { icon: ShieldCheck,     label: 'ATS Score',   path: '/ats-score' },
+  { icon: PenTool,         label: 'PDF Editor',  path: '/pdf-editor' },
   { icon: BookOpen,        label: 'ATS Guide',   path: '/ats-guide' },
   { icon: Settings,        label: 'Settings',    path: '/settings' },
 ];
 
 export function Sidebar() {
-  const mobileNavItems = navItems.filter(item => ['Dashboard', 'Builder', 'ATS Score', 'Settings'].includes(item.label));
+  const mobileNavItems = navItems.filter(item => ['Dashboard', 'Builder', 'ATS Score', 'PDF Editor', 'Settings'].includes(item.label));
 
   const collapseTimer = useRef(null);
   const sidebarRef = useRef(null);

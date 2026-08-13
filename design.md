@@ -189,6 +189,25 @@ cvStore
 
 ---
 
+## Clearscan PDF Editor (Module)
+
+The application includes a fully standalone, client-side PDF Editor designed for privacy-first, in-browser resume adjustments without touching a server.
+
+### Core Capabilities
+- **Visual Overlays:** Users can add new Text, Whiteout Rectangles (to mask old data), and Images (signatures/logos).
+- **True Inline Editing:** Leveraging `pdfjs-dist` text layer extraction, users can click existing text in the PDF to seamlessly replace it.
+- **Undo / Redo History:** Full state tracking for all drag/drop and editing interactions.
+- **Password Support:** Handles encrypted PDFs by prompting for decryption inline.
+
+### Architecture
+- **Rendering (Visuals):** Uses `pdfjs-dist` (via a Web Worker) to paint the PDF bytes to an HTML5 `<canvas>`.
+- **Interaction (State):** React tracks all added elements as absolute-positioned DOM nodes sitting strictly above the canvas (`z-index: 20`).
+- **Rebuilding (Export):** Uses `pdf-lib` to execute the actual PDF byte modifications.
+  - Custom `domToPdfCoords` utility precisely maps CSS pixels (top-left origin) to PDF Points (bottom-left origin, accounting for scale).
+  - Existing text edits are processed via **Visual Masking**: `pdf-lib` draws an opaque background-colored rectangle precisely over the old text's bounding box to "erase" it from the visual stream, then draws the new text directly on top, avoiding content stream corruption risks.
+
+---
+
 ## Deployment
 
 - **Build:** `npm run build` (Vite, zero errors)

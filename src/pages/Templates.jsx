@@ -1,4 +1,5 @@
 import { useCVStore } from '../store/cvStore';
+import { SEO } from '../components/seo/SEO';
 import { Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useEffect } from 'react';
@@ -92,8 +93,14 @@ export function Templates() {
   useEffect(() => { document.title = 'Templates — Clearscan'; return () => { document.title = 'Clearscan'; }; }, []);
 
   return (
-    <div className="max-w-4xl animate-fade-in">
-      <div className="mb-8">
+    <div className="max-w-7xl mx-auto space-y-6">
+      <SEO 
+        title="ATS Resume Templates | Clearscan" 
+        description="Browse our collection of highly optimized, professionally designed ATS resume templates. Choose the perfect format to beat the tracking systems."
+        keywords="ATS resume templates, best ATS template, ATS friendly resume formats"
+        url="/templates"
+      />
+      <div className="flex flex-col gap-2">
         <h1 className="text-xl font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
           ATS-Safe Templates
         </h1>

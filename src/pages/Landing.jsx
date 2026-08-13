@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2, Zap, FileText } from 'lucide-react';
+import { SEO } from '../components/seo/SEO';
 import { useEffect } from 'react';
 
 const features = [
@@ -18,6 +19,12 @@ export function Landing() {
       className="min-h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden"
       style={{ backgroundColor: 'var(--color-bg-primary)' }}
     >
+      <SEO 
+        title="Best ATS Friendly Resume Generator | Clearscan" 
+        description="Clearscan is the best ATS friendly resume generator. Build a professional CV that bypasses Applicant Tracking Systems and lands you more interviews."
+        keywords="ATS resume builder, best ATS friendly resume generator, resume builder for ATS, free ATS resume checker"
+        url="/"
+      />
 
       {/* Content */}
       <motion.div
